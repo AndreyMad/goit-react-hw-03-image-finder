@@ -1,16 +1,28 @@
 import React, { Component } from "react";
+import Loader from "./Loader/Loader";
 import * as api from "../Services/Api";
 import Searchbar from "./Searchbar/Searchbar";
-import ImageGalleryItem from "./ImageGalleryItem/ImageGalleryItem";
+import ImageGallery from "./ImageGallery/ImageGallery";
 
 class App extends Component {
   state = {
-    items: []
+    items: [],
+    searchQuery: "",
+    loader: false
   };
 
   componentDidMount() {
     this.getRequest();
   }
+
+  handleSearchQuery = e => {
+    this.setState({ searchQuery: e.target.value });
+  };
+
+  searchFunc = e => {
+    e.preventDefault();
+    this.getRequest(this.state.searchQuery);
+  };
 
   getRequest = query => {
     api
@@ -19,11 +31,15 @@ class App extends Component {
   };
 
   render() {
-    const { items } = this.state;
+    const { items, loader } = this.state;
     return (
       <>
-        <Searchbar />;
-        <ImageGalleryItem items={items} />
+        <Loader isLoader={loader} />
+        <Searchbar
+          handleSearchQuery={this.handleSearchQuery}
+          searchFunc={this.searchFunc}
+        />
+        <ImageGallery items={items} />
       </>
     );
   }

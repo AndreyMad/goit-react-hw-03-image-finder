@@ -1,0 +1,7 @@
+.loader_wrapper {
+  position: absolute;
+  top: 30vh;
+  transform: translate(-50%);
+  left: 50vw;
+  z-index: 1000;
+}
