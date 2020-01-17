@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import * as api from "../Services/Api";
 import Searchbar from "./Searchbar/Searchbar";
-import ImageGalleryItem from "./ImageGalleryItem/ImageGalleryItem";
+import ImageGallery from "./ImageGallery/ImageGallery";
 
 class App extends Component {
   state = {
@@ -23,7 +23,7 @@ class App extends Component {
     return (
       <>
         <Searchbar />;
-        <ImageGalleryItem items={items} />
+        <ImageGallery items={items} />
       </>
     );
   }

@@ -2,7 +2,7 @@ import React from "react";
 import style from "./ImageGalleryItem.module.css";
 
 const ImageGalleryItem = item => {
-  //   console.log(item);
+  console.log(item);
   return (
     <img
       src={item.webformatURL}
