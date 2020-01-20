@@ -1,9 +1,10 @@
 import React from "react";
+import style from "./Modal.module.css";
 
 const Modal = () => {
   return (
-    <div className="Overlay">
-      <div className="Modal">
+    <div className={style.Overlay}>
+      <div className={style.Modal}>
         <img src="" alt="" />
       </div>
     </div>
