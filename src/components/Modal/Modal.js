@@ -1,21 +1,41 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import style from "./Modal.module.css";
 
 class Modal extends Component {
-  state = {
-    items: this.props.items
+  static propTypes = {
+    modalItemUrl: PropTypes.string.isRequired,
+    closeModal: PropTypes.func.isRequired
   };
 
-  static propTypes = {
-    items: this.propTypes.arr.isRequired
-  };
+  componentDidMount() {
+    const { closeModal } = this.props;
+    window.addEventListener("keydown", closeModal);
+  }
+
+  componentWillUnmount() {
+    const { closeModal } = this.props;
+    window.removeEventListener("keydown", closeModal);
+  }
+
+  // closeModal = e => {
+  //   console.log(e);
+  //   if (e.keyCode === "Escape" || e.target.className !== "Overlay") return;
+
+  //   this.setState({ showModal: false, modalItemUrl: "" });
+  // };
 
   render() {
-    const { items } = this.state;
+    const { closeModal, modalItemUrl } = this.props;
     return (
-      <div className={style.Overlay}>
+      <div
+        className={style.Overlay}
+        onClick={closeModal}
+        onKeyDown={closeModal}
+        role="presentation"
+      >
         <div className={style.Modal}>
-          <img src={items} alt="" />
+          <img src={modalItemUrl} alt="" />
         </div>
       </div>
     );

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Loader from "./Loader/Loader";
+import LoaderSpinner from "./Loader/Loader";
 import * as api from "../Services/Api";
 import Searchbar from "./Searchbar/Searchbar";
 import ImageGallery from "./ImageGallery/ImageGallery";
@@ -10,15 +10,15 @@ class App extends Component {
   state = {
     items: [],
     searchQuery: "",
-    isLoad: false,
+    isLoad: true,
     showModal: false,
+    modalItemUrl: "",
     page: 1
   };
 
-  // componentDidMount() {
-  //   this.getRequest();
-  //   this.setState({ isLoad: false });
-  // }
+  componentDidMount() {
+    this.getRequest();
+  }
 
   componentDidUpdate(prevProps, prevState) {
     const { searchQuery, page } = this.state;
@@ -29,11 +29,11 @@ class App extends Component {
         }))
       );
     }
-    this.scrollTo(
-      document.documentElement.clientHeight +
-        document.documentElement.scrollTop -
-        70
-    );
+
+    // window.scrollTo({
+    //   top: document.documentElement.scrollHeight,
+    //   behavior: "smooth"
+    // });
   }
 
   handleSearchQuery = e => {
@@ -51,10 +51,6 @@ class App extends Component {
     this.setState(prevState => ({
       page: prevState.page + 1
     }));
-    window.scrollTo({
-      top: 10000,
-      behavior: "smooth"
-    });
   };
 
   searchFunc = e => {
@@ -72,18 +68,34 @@ class App extends Component {
       .finally(this.setState({ isLoad: false }));
   };
 
+  openModal = ({ target }) => {
+    const { items } = this.state;
+    const modalItemUrl = items.find(item => {
+      return item.id === Number(target.id);
+    }).largeImageURL;
+    this.setState({ showModal: true, modalItemUrl });
+  };
+
+  closeModal = e => {
+    if (e.code === "Escape" || e.target.className.includes("Overlay")) {
+      this.setState({ showModal: false, modalItemUrl: "" });
+    }
+  };
+
   render() {
-    const { showModal, items, isLoad } = this.state;
+    const { showModal, modalItemUrl, items, isLoad } = this.state;
     return (
       <>
-        {isLoad && <Loader isLoad />}
+        {isLoad && <LoaderSpinner />}
         <Searchbar
           handleSearchQuery={this.handleSearchQuery}
           searchFunc={this.searchFunc}
         />
-        <ImageGallery items={items} />
+        <ImageGallery items={items} openModal={this.openModal} />
         {items.length > 0 && <Button loadMore={this.loadMore} />}
-        {showModal && <Modal items={items} />}
+        {showModal && (
+          <Modal modalItemUrl={modalItemUrl} closeModal={this.closeModal} />
+        )}
       </>
     );
   }
