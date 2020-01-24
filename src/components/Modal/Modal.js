@@ -11,19 +11,16 @@ class Modal extends Component {
   componentDidMount() {
     const { closeModal } = this.props;
     window.addEventListener("keydown", closeModal);
+    const body = document.querySelector("body");
+    body.style = " overflow: hidden ";
   }
 
   componentWillUnmount() {
     const { closeModal } = this.props;
     window.removeEventListener("keydown", closeModal);
+    const body = document.querySelector("body");
+    body.style = "";
   }
-
-  // closeModal = e => {
-  //   console.log(e);
-  //   if (e.keyCode === "Escape" || e.target.className !== "Overlay") return;
-
-  //   this.setState({ showModal: false, modalItemUrl: "" });
-  // };
 
   render() {
     const { closeModal, modalItemUrl } = this.props;
@@ -35,7 +32,7 @@ class Modal extends Component {
         role="presentation"
       >
         <div className={style.Modal}>
-          <img src={modalItemUrl} alt="" />
+          <img src={modalItemUrl} alt="" role="presentation" />
         </div>
       </div>
     );

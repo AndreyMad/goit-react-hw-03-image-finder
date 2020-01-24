@@ -10,7 +10,7 @@ class App extends Component {
   state = {
     items: [],
     searchQuery: "",
-    isLoad: true,
+    isLoad: false,
     showModal: false,
     modalItemUrl: "",
     page: 1
@@ -23,52 +23,48 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { searchQuery, page } = this.state;
     if (page !== prevState.page) {
-      api.searchQuery(searchQuery, page).then(response =>
+      api.searchByQuery(searchQuery, page).then(response =>
         this.setState(state => ({
           items: [...state.items, ...response.data.hits]
         }))
       );
     }
-
-    // window.scrollTo({
-    //   top: document.documentElement.scrollHeight,
-    //   behavior: "smooth"
-    // });
   }
 
-  handleSearchQuery = e => {
-    this.setState({ searchQuery: e.target.value });
+  onSubmit = value => {
+    this.setState({ isLoad: true, searchQuery: value }, this.getRequest(value));
   };
 
-  scrollTo = height => {
+  getRequest = value => {
+    api
+      .searchByQuery(value)
+      .then(response => this.setState({ items: response.data.hits }))
+      .catch(err => {
+        throw new Error(err);
+      })
+      .finally(() => {
+        this.setState({ isLoad: false });
+      });
+  };
+
+  scrollFunc = () => {
     window.scrollTo({
-      top: height,
+      top: document.documentElement.scrollHeight,
       behavior: "smooth"
     });
   };
 
   loadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1
-    }));
-  };
-
-  searchFunc = e => {
-    e.preventDefault();
-    this.setState({ isLoad: true });
-    const { searchQuery } = this.state;
-    this.getRequest(searchQuery);
-  };
-
-  getRequest = query => {
-    this.setState({ isLoad: true });
-    api
-      .searchQuery(query)
-      .then(response => this.setState({ items: response.data.hits }))
-      .finally(this.setState({ isLoad: false }));
+    this.setState(
+      prevState => ({
+        page: prevState.page + 1
+      }),
+      this.scrollFunc()
+    );
   };
 
   openModal = ({ target }) => {
+    this.loaderOn();
     const { items } = this.state;
     const modalItemUrl = items.find(item => {
       return item.id === Number(target.id);
@@ -79,7 +75,16 @@ class App extends Component {
   closeModal = e => {
     if (e.code === "Escape" || e.target.className.includes("Overlay")) {
       this.setState({ showModal: false, modalItemUrl: "" });
+      this.loaderOff();
     }
+  };
+
+  loaderOn = () => {
+    this.setState({ isLoad: true });
+  };
+
+  loaderOff = () => {
+    this.setState({ isLoad: false });
   };
 
   render() {
@@ -87,14 +92,15 @@ class App extends Component {
     return (
       <>
         {isLoad && <LoaderSpinner />}
-        <Searchbar
-          handleSearchQuery={this.handleSearchQuery}
-          searchFunc={this.searchFunc}
-        />
+        <Searchbar onSubmit={this.onSubmit} />
         <ImageGallery items={items} openModal={this.openModal} />
         {items.length > 0 && <Button loadMore={this.loadMore} />}
         {showModal && (
-          <Modal modalItemUrl={modalItemUrl} closeModal={this.closeModal} />
+          <Modal
+            modalItemUrl={modalItemUrl}
+            loaderOff={this.loaderOff}
+            closeModal={this.closeModal}
+          />
         )}
       </>
     );
