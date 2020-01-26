@@ -16,18 +16,17 @@ class App extends Component {
     page: 1
   };
 
-  componentDidMount() {
-    this.getRequest();
-  }
+  // componentDidMount() {
+  //   this.getRequest();
+  // }
 
   componentDidUpdate(prevProps, prevState) {
-    const { searchQuery, page } = this.state;
-    if (page !== prevState.page) {
-      api.searchByQuery(searchQuery, page).then(response =>
-        this.setState(state => ({
-          items: [...state.items, ...response.data.hits]
-        }))
-      );
+    const { items } = this.state;
+    if (prevState.items !== items) {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth"
+      });
     }
   }
 
@@ -47,20 +46,19 @@ class App extends Component {
       });
   };
 
-  scrollFunc = () => {
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: "smooth"
-    });
-  };
-
   loadMore = () => {
-    this.setState(
-      prevState => ({
-        page: prevState.page + 1
-      }),
-      this.scrollFunc()
-    );
+    const { searchQuery, page } = this.state;
+    this.setState(prevState => ({
+      page: prevState.page + 1
+    }));
+    api
+      .searchByQuery(searchQuery, page)
+      .then(response => {
+        this.setState(state => ({
+          items: [...state.items, ...response.data.hits]
+        }));
+      })
+      .then();
   };
 
   openModal = ({ target }) => {

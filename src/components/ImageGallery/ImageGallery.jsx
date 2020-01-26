@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
+// eslint-disable-next-line import/extensions
+import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem.jsx";
 import style from "./ImageGallery.module.css";
 
 const ImageGallery = ({ items, openModal }) => {

@@ -11,9 +11,13 @@
 }
 
 .Modal {
-  max-width: calc(100vw - 48px);
-  max-height: calc(100vh - 24px);
+  max-width: 1100px;
+  max-height: 700px;
 }
-.scrollOff {
+.Modal > img {
+  width: 100%;
+  height: 100%;
+}
+/* .scrollOff {
   overflow: hidden;
-}
+} */

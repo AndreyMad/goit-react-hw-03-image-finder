@@ -11,15 +11,13 @@ class Modal extends Component {
   componentDidMount() {
     const { closeModal } = this.props;
     window.addEventListener("keydown", closeModal);
-    const body = document.querySelector("body");
-    body.style = " overflow: hidden ";
+    document.body.style = " overflow: hidden ";
   }
 
   componentWillUnmount() {
     const { closeModal } = this.props;
     window.removeEventListener("keydown", closeModal);
-    const body = document.querySelector("body");
-    body.style = "";
+    document.body.style = "";
   }
 
   render() {
