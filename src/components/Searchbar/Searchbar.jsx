@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import style from "./Searchbar.module.css";
 
 class Searchbar extends Component {
-  state = {
-    inputValue: ""
-  };
-
   static propTypes = {
     onSubmit: PropTypes.func.isRequired
+  };
+
+  state = {
+    inputValue: ""
   };
 
   handleChange = e => {
@@ -26,24 +26,22 @@ class Searchbar extends Component {
   render() {
     const { inputValue } = this.state;
     return (
-      <>
-        <header className={style.Searchbar}>
-          <form className={style.SearchForm} onSubmit={this.handleSubmit}>
-            <button type="submit" className={style.SearchForm_button}>
-              <span className={style.SearchForm_button_label}>Search</span>
-            </button>
+      <header className={style.Searchbar}>
+        <form className={style.SearchForm} onSubmit={this.handleSubmit}>
+          <button type="submit" className={style.SearchForm_button}>
+            <span className={style.SearchForm_button_label}>Search</span>
+          </button>
 
-            <input
-              className={style.SearchForm_input}
-              onChange={this.handleChange}
-              value={inputValue}
-              type="text"
-              autoComplete="off"
-              placeholder="Search images and photos"
-            />
-          </form>
-        </header>
-      </>
+          <input
+            className={style.SearchForm_input}
+            onChange={this.handleChange}
+            value={inputValue}
+            type="text"
+            autoComplete="off"
+            placeholder="Search images and photos"
+          />
+        </form>
+      </header>
     );
   }
 }
